@@ -1,11 +1,28 @@
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
 #canvas1 {
     border: 5px solid black;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     width: 600px;
     height: 600px;
+    margin-bottom: 40px;
+}
+
+#canvas2 {
+    border: 3px solid black;
+    width: 800px;
+    height: 700px;
+}
+
+#speed {
+    width: 800px;
+    font-size: 25px;
+}
+
+#slider {
+    width: 100%;
 }
 
 .controls {
