@@ -16,6 +16,12 @@
     height: 700px;
 }
 
+#canvas3 {
+    border: 3px solid black;
+    width: 500px;
+    height: 1000px;
+}
+
 #speed {
     width: 800px;
     font-size: 25px;
