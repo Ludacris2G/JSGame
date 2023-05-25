@@ -16,7 +16,7 @@
     height: 700px;
 }
 
-#canvas3 {
+#canvas3, #canvas4 {
     border: 3px solid black;
     width: 500px;
     height: 1000px;
@@ -29,6 +29,10 @@
 
 #slider {
     width: 100%;
+}
+
+.enemy-container {
+    display: flex;
 }
 
 .controls {
