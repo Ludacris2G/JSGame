@@ -200,7 +200,7 @@ function animate3() {
     gameFrame3++;
     requestAnimationFrame(animate3);
 }
-animate3();
+// animate3();
 
 /** @type {HTMLCanvasElement} */
 const canvas4 = document.getElementById('canvas4');
@@ -255,7 +255,7 @@ function animate4() {
     gameFrame4++;
     requestAnimationFrame(animate4);
 }
-animate4();
+// animate4();
 
 
 /** @type {HTMLCanvasElement} */
@@ -281,12 +281,12 @@ class Enemy3 {
         this.frame = 0;
         this.flapSpeet = Math.floor(Math.random() * 3 + 1);
         this.angle = 0;
-        this.angleSpeed = Math.random() * 2;
-        this.curve = Math.random() * 200;
+        this.angleSpeed = Math.random() * 1.5;
+        this.curve = Math.random() * 200 + 50;
     }
     update() {
-        this.x = this.curve * Math.sin(this.angle * Math.PI/180) + canvas5.width/2 - this.width/2;
-        // this.y += this.curve * Math.sin(this.angle);
+        this.x = canvas5.width/2 * Math.sin(this.angle * Math.PI/180) + canvas5.width/2 - this.width/2;
+        this.y = canvas5.height/2 * Math.cos(this.angle * Math.PI/360) + (canvas5.height/2 - this.height/2);
         this.angle += this.angleSpeed;
         if (this.x + this.width < 0) this.x = canvas5.width;
         if (gameFrame5 % this.flapSpeet === 0) {
@@ -311,4 +311,64 @@ function animate5() {
     gameFrame5++;
     requestAnimationFrame(animate5);
 }
-animate5();
+// animate5();
+
+/** @type {HTMLCanvasElement} */
+const canvas6 = document.getElementById('canvas6');
+const ctx6 = canvas6.getContext('2d');
+const CANVAS_WIDTH6 = canvas6.width = 500;
+const CANVAS_HEIGHT6 = canvas6.height = 1000;
+const numberOfEnemies6 = 20;
+const enemiesArray6 = [];
+let gameFrame6 = 0;
+
+class Enemy6 {
+    constructor() {
+        this.image = new Image();
+        this.image.src = './images/enemies/enemy4.png';
+        this.speed = Math.random() * 4 + 1;
+        this.spriteWidth = 213;
+        this.spriteHeight = 230;
+        this.width = this.spriteWidth/2;
+        this.height = this.spriteHeight/2;
+        this.x = Math.random() * (canvas6.width - this.width);
+        this.y = Math.random() * (canvas6.height - this.height);
+        this.newX = Math.random() * (canvas6.width - this.width);
+        this.newY = Math.random() * (canvas6.height - this.height);
+        this.frame = 0;
+        this.flapSpeed = 5;
+        this.interval = Math.floor(Math.random() * 200 + 50);
+    }
+    update() {
+        if (gameFrame6 % this.interval === 0) {
+            this.newX = Math.random() * canvas6.width;
+            this.newY = Math.random() * canvas6.height;
+        }
+        let dx = this.x - this.newX;
+        let dy = this.y - this.newY;
+        this.x -= dx/20;
+        this.y -= dy/90;
+        if (gameFrame6 % this.flapSpeed === 0) {
+            this.frame > 7 ? this.frame = 0 : this.frame++;
+        }
+    }
+    draw() {
+        ctx6.drawImage(this.image, this.frame * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.height, this.width)
+
+    }
+}
+
+for (let i = 0; i <= numberOfEnemies6; i++) {
+    enemiesArray6.push(new Enemy6());
+}
+
+function animate6() {
+    ctx6.clearRect(0, 0, CANVAS_WIDTH6, CANVAS_HEIGHT6);
+    enemiesArray6.forEach(enemy => {
+        enemy.update()
+        enemy.draw()
+    })
+    gameFrame6++;
+    requestAnimationFrame(animate6);
+}
+animate6();
