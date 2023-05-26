@@ -200,8 +200,8 @@ function animate3() {
     gameFrame3++;
     requestAnimationFrame(animate3);
 }
-
 animate3();
+
 /** @type {HTMLCanvasElement} */
 const canvas4 = document.getElementById('canvas4');
 const ctx4 = canvas4.getContext('2d');
@@ -256,3 +256,59 @@ function animate4() {
     requestAnimationFrame(animate4);
 }
 animate4();
+
+
+/** @type {HTMLCanvasElement} */
+const canvas5 = document.getElementById('canvas5');
+const ctx5 = canvas5.getContext('2d');
+const CANVAS_WIDTH5 = canvas5.width = 500;
+const CANVAS_HEIGHT5 = canvas5.height = 1000;
+const numberOfEnemies5 = 100;
+const enemiesArray5 = [];
+let gameFrame5 = 0;
+
+class Enemy3 {
+    constructor() {
+        this.image = new Image();
+        this.image.src = './images/enemies/enemy3.png';
+        this.speed = Math.random() * 4 + 1;
+        this.spriteWidth = 218;
+        this.spriteHeight = 188;
+        this.width = this.spriteWidth / 2;
+        this.height = this.spriteHeight / 2;
+        this.x = Math.random() * (canvas5.width - this.width);
+        this.y = Math.random() * (canvas5.height - this.height);
+        this.frame = 0;
+        this.flapSpeet = Math.floor(Math.random() * 3 + 1);
+        this.angle = 0;
+        this.angleSpeed = Math.random() * 2;
+        this.curve = Math.random() * 200;
+    }
+    update() {
+        this.x = this.curve * Math.sin(this.angle * Math.PI/180) + canvas5.width/2 - this.width/2;
+        // this.y += this.curve * Math.sin(this.angle);
+        this.angle += this.angleSpeed;
+        if (this.x + this.width < 0) this.x = canvas5.width;
+        if (gameFrame5 % this.flapSpeet === 0) {
+            this.frame > 4 ? this.frame = 0 : this.frame++;
+        }
+    }
+    draw() {
+        ctx5.drawImage(this.image, this.frame * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
+    }
+};
+
+for (let i = 0; i < numberOfEnemies5; i++) {
+    enemiesArray5.push(new Enemy3());
+}
+
+function animate5() {
+    ctx5.clearRect(0, 0, CANVAS_WIDTH5, CANVAS_HEIGHT5);
+    enemiesArray5.forEach(enemy => {
+        enemy.update();
+        enemy.draw();
+    });
+    gameFrame5++;
+    requestAnimationFrame(animate5);
+}
+animate5();
