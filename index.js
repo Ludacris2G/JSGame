@@ -341,8 +341,8 @@ class Enemy6 {
     }
     update() {
         if (gameFrame6 % this.interval === 0) {
-            this.newX = Math.random() * canvas6.width;
-            this.newY = Math.random() * canvas6.height;
+            this.newX = Math.random() * (canvas6.width - this.width);
+            this.newY = Math.random() * (canvas6.height - this.height);
         }
         let dx = this.x - this.newX;
         let dy = this.y - this.newY;
@@ -371,4 +371,83 @@ function animate6() {
     gameFrame6++;
     requestAnimationFrame(animate6);
 }
-animate6();
+// animate6();
+
+const rect1 = { x: 5, y: 5, width: 50, height: 50 };
+const rect2 = { x: 20, y: 10, width: 10, height: 10 };
+
+if (rect1.x > rect2.x + rect2.width || 
+    rect1.x + rect1.width < rect2.x ||
+    rect1.y > rect2.y + rect2.height ||
+    rect1.y + rect1.height < rect2.y
+) {
+
+} else {
+
+}
+
+const circle1 = { x: 10, y: 10, radius: 300 };
+const circle2 = { x: 500, y: 500, radius: 150 };
+
+let dx = circle2.x - circle1.x;
+let dy = circle2.y - circle1.y;
+let distance = Math.sqrt(dx * dx + dy * dy);
+let sumOfRadii = circle1.radius + circle2.radius;
+
+if (distance < sumOfRadii) {
+    // collision
+} else if (distance === sumOfRadii) {
+    // touch
+} else {
+    // no collision
+}
+
+const canvas7 = document.getElementById('canvas7');
+const ctx7 = canvas7.getContext('2d');
+canvas7.width = 500;
+canvas7.height = 700;
+const explosions = [];
+let canvasPosition = canvas7.getBoundingClientRect();
+console.log(canvasPosition);
+
+class Explosion {
+    constructor(x, y) {
+        this.image = new Image();
+        this.image.src = './images/boom.png';
+        this.spriteWidth = 200;
+        this.spriteHeight = 179;
+        this.width = this.spriteWidth*0.5;
+        this.height = this.spriteHeight*0.5;
+        this.x = x - this.width*0.5;
+        this.y = y - this.height*0.5;
+        this.frame = 0;
+        this.timer = 0;
+    }
+    update() {
+        this.timer++;
+        if (this.timer % 15 === 0) {
+            this.frame++;
+        }
+    }
+    draw() {
+        ctx7.drawImage(this.image, this.frame * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height)
+        // ctx7.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
+    }
+}
+    
+window.addEventListener('click', function(e) {
+    let positionX = e.x - canvasPosition.left;
+    let positionY = e.y - canvasPosition.top;
+    explosions.push(new Explosion(positionX, positionY));
+    console.log(explosions);
+})
+
+function animate7() {
+    ctx7.clearRect(0, 0, canvas7.width, canvas7.height);
+    for (let i = 0; i < explosions.length; i++) {
+        explosions[i].update();
+        explosions[i].draw();
+    }
+    requestAnimationFrame(animate7);
+}
+animate7();
