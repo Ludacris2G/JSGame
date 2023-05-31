@@ -29,6 +29,12 @@
     background: black;
 }
 
+#canvas8 {
+    border: 3px solid black;
+    width: 500px;
+    height: 800px;
+}
+
 #speed {
     width: 800px;
     font-size: 25px;
