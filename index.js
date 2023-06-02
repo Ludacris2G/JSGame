@@ -630,6 +630,7 @@ window.addEventListener('load', function() {
     let enemies = [];
     let score = 0;
     let gameOver = false;
+    const fullScreenButton = this.document.getElementById('fullScreenButton');
 
     class InputHandler {
         constructor() {
@@ -688,7 +689,7 @@ window.addEventListener('load', function() {
             this.frameY = 0;
             this.speed = 0;
             this.vY = 0;
-            this.weight = 1;
+            this.weight = .8;
             this.fps = 20;
             this.frameTimer = 0;
             this.frameInterval = 1000/this.fps;
@@ -700,15 +701,20 @@ window.addEventListener('load', function() {
             this.frameY = 0;
         }
         draw(ctx) {
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(this.x + this.width/2, this.y + this.height/2 + 20, this.width/3, 0, Math.PI * 2);
+            ctx.stroke();
             ctx.drawImage(this.image, this.width * this.frameX, this.height * this.frameY, this.width, this.height, this.x, this.y, this.width, this.height)
         } 
         update(input, deltaTime, enemies) {
             // collision detection
             enemies.forEach(enemy => {
-                const dx = (enemy.x + enemy.width/2) - (this.x + this.width/2);
-                const dy = (enemy.y + enemy.height/2) - (this.y + this.height/2);
+                const dx = (enemy.x + enemy.width/2 - 20) - (this.x + this.width/2);
+                const dy = (enemy.y + enemy.height/2) - (this.y + this.height/2 + 20);
                 const distance = Math.sqrt(dx * dx + dy * dy);
-                if (distance < enemy.width/2 + this.width/2) {
+                if (distance < enemy.width/3 + this.width/3) {
                     gameOver = true;
                 }
             })
@@ -731,11 +737,11 @@ window.addEventListener('load', function() {
                         input.keys.indexOf('swipe up') > -1) && 
                         this.onGround()
                     ) {
-                this.vY -= 32;
+                this.vY -= 30;
             } else {
                 this.speed = 0;
             }
-            // horisontal
+            // horizontal
             this.x += this.speed;
             if (this.x < 0) this.x = 0;
             else if (this.x > this.gameWidth - this.width) this.x = this.gameWidth - this.width;
@@ -796,11 +802,16 @@ window.addEventListener('load', function() {
             this.fps = 20;
             this.frameTimer = 0;
             this.frameInterval = 1000/this.fps;
-            this.speed = 2;
+            this.speed = 5;
             this.markedForDeletion = false;
         }
         draw(ctx) {
-            ctx.drawImage(this.image, this.width * this.frameX, 0, this.width, this.height, this.x, this.y, this.width, this.height)
+            ctx.drawImage(this.image, this.width * this.frameX, 0, this.width, this.height, this.x, this.y, this.width, this.height);
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(this.x + this.width/2 - 20, this.y + this.height/2, this.width/3, 0, Math.PI * 2);
+            ctx.stroke();
         }
         update(deltaTime) {
             if (this.frameTimer > this.frameInterval) {
@@ -842,9 +853,9 @@ window.addEventListener('load', function() {
         if (gameOver) {
             ctx.textAlign = 'center';
             ctx.fillStyle = 'black';
-            ctx.fillText('GAME OVER, press Enter to play again', canvas.width/2, 200);
+            ctx.fillText('GAME OVER, press Enter or swipe down to play again', canvas.width/2, 200);
             ctx.fillStyle = 'white';
-            ctx.fillText('GAME OVER, press Enter to play again', canvas.width/2 + 2, 202);
+            ctx.fillText('GAME OVER, press Enter or swipe down to play again', canvas.width/2 + 2, 202);
         }
     }
 
@@ -856,6 +867,19 @@ window.addEventListener('load', function() {
         gameOver = false;
         animate(0);
     }
+
+    function toggleFullScreen() {
+        console.log(document.fullscreenElement);
+        if (!document.fullscreenElement) {
+            canvas.requestFullscreen()
+                .catch(error => {
+                    alert(`Error, can't enable full-screen mode: ${error.message}`);
+                });
+        } else {
+            document.exitFullScreen();
+        }
+    }
+    fullScreenButton.addEventListener('click', toggleFullScreen);
 
     const input = new InputHandler();
     const player = new Player(canvas.width, canvas.height);
@@ -878,5 +902,28 @@ window.addEventListener('load', function() {
         displayStatusText(ctx);
         if (!gameOver) requestAnimationFrame(animate);
     }
-    animate(0);
+    // animate(0);
+});
+
+import Player from "./player.js";
+import InputHandler from "./input.js";
+import { drawStatusText } from "./utils.js";
+
+window.addEventListener('load', function() {
+    const loading = document.getElementById('loading');
+    loading.style.display = 'none';
+    const canvas10 = document.getElementById('canvas10');
+    const ctx10 = canvas10.getContext('2d');
+    canvas10.width = 400;
+    canvas10.height = 400;
+    const player = new Player(canvas10.width, canvas10.height);
+    const input = new InputHandler();
+    function animate() {
+        ctx10.clearRect(0, 0, canvas10.width, canvas10.height);
+        player.update(input.lastKey);
+        player.draw(ctx10);
+        drawStatusText(ctx10, input, player);
+        requestAnimationFrame(animate);
+    }
+    animate();
 });
