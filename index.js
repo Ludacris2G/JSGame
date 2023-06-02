@@ -82,7 +82,7 @@ function animate() {
     gameFrame++;
     requestAnimationFrame(animate);
 };
-// animate();
+animate();
 
 // canvas 2 ->
 const canvas2 = document.getElementById('canvas2');
@@ -149,7 +149,7 @@ window.addEventListener('load', function() {
         gameFrame2--;
         requestAnimationFrame(animate2);
     }
-    // animate2();
+    animate2();
 })
 
 /** @type {HTMLCanvasElement} */
@@ -199,7 +199,7 @@ function animate3() {
     gameFrame3++;
     requestAnimationFrame(animate3);
 }
-// animate3();
+animate3();
 
 /** @type {HTMLCanvasElement} */
 const canvas4 = document.getElementById('canvas4');
@@ -254,7 +254,7 @@ function animate4() {
     gameFrame4++;
     requestAnimationFrame(animate4);
 }
-// animate4();
+animate4();
 
 
 /** @type {HTMLCanvasElement} */
@@ -310,7 +310,7 @@ function animate5() {
     gameFrame5++;
     requestAnimationFrame(animate5);
 }
-// animate5();
+animate5();
 
 /** @type {HTMLCanvasElement} */
 const canvas6 = document.getElementById('canvas6');
@@ -370,7 +370,7 @@ function animate6() {
     gameFrame6++;
     requestAnimationFrame(animate6);
 }
-// animate6();
+animate6();
 
 const rect1 = { x: 5, y: 5, width: 50, height: 50 };
 const rect2 = { x: 20, y: 10, width: 10, height: 10 };
@@ -618,7 +618,7 @@ window.addEventListener('load', () => {
         game.draw();
         requestAnimationFrame(animate8);
     }
-    // animate8(0);
+    animate8(0);
 });
 
 
@@ -902,7 +902,7 @@ window.addEventListener('load', function() {
         displayStatusText(ctx);
         if (!gameOver) requestAnimationFrame(animate);
     }
-    // animate(0);
+    animate(0);
 });
 
 import Player from "./player.js";
@@ -916,14 +916,19 @@ window.addEventListener('load', function() {
     const ctx10 = canvas10.getContext('2d');
     canvas10.width = 400;
     canvas10.height = 400;
+
     const player = new Player(canvas10.width, canvas10.height);
     const input = new InputHandler();
-    function animate() {
+
+    let lastTime = 0;
+    function animate(timeStamp) {
+        const deltaTime = timeStamp - lastTime;
+        lastTime = timeStamp;
         ctx10.clearRect(0, 0, canvas10.width, canvas10.height);
         player.update(input.lastKey);
-        player.draw(ctx10);
+        player.draw(ctx10, deltaTime);
         drawStatusText(ctx10, input, player);
         requestAnimationFrame(animate);
     }
-    animate();
+    animate(0);
 });
